@@ -21,7 +21,7 @@ import (
 	"github.com/open-telemetry/opentelemetry-ebpf-profiler/host"
 	"github.com/open-telemetry/opentelemetry-ebpf-profiler/interpreter"
 	"github.com/open-telemetry/opentelemetry-ebpf-profiler/interpreter/apmint"
-	"github.com/open-telemetry/opentelemetry-ebpf-profiler/interpreter/customlabelsn"
+	"github.com/open-telemetry/opentelemetry-ebpf-profiler/interpreter/customlabels"
 	"github.com/open-telemetry/opentelemetry-ebpf-profiler/interpreter/dotnet"
 	"github.com/open-telemetry/opentelemetry-ebpf-profiler/interpreter/golang"
 	"github.com/open-telemetry/opentelemetry-ebpf-profiler/interpreter/hotspot"
