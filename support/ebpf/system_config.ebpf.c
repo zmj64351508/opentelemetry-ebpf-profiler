@@ -25,7 +25,7 @@ bpf_map_def SEC("maps") system_analysis = {
 
 // read_kernel_memory reads data from given kernel address. This is
 // invoked once on entry to bpf() syscall on the given pid context.
-SEC("tracepoint/syscalls/sys_enter_bpf")
+SEC("kprobe/__arm64_sys_bpf")
 int read_kernel_memory(void *ctx) {
   u32 key0 = 0;
 

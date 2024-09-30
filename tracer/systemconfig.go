@@ -148,6 +148,8 @@ func executeSystemAnalysisBpfCode(progSpec *cebpf.ProgramSpec, maps map[string]*
 			Program: prog})
 	case cebpf.TracePoint:
 		progLink, err = link.Tracepoint("syscalls", "sys_enter_bpf", prog, nil)
+	case cebpf.Kprobe:
+		progLink, err = link.Kprobe("__arm64_sys_bpf", prog, nil)
 	default:
 		err = fmt.Errorf("invalid system analysis program type '%v'", prog.Type())
 	}
