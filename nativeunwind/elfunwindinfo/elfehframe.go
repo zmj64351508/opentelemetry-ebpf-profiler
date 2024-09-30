@@ -1241,10 +1241,12 @@ func hashUint64(u uint64) uint32 {
 }
 
 // parseEHFrame parses the .eh_frame DWARF info, extracting stack deltas.
-func (ee *elfExtractor) parseEHFrame() error {
-	ehFrameHdrSec, ehFrameSec, err := findEhSections(ee.file)
+func (ee *elfExtractor) parseEHFrame(ef *pfelf.File) error {
+	ehFrameHdrSec, ehFrameSec, err := findEhSections(ef)
 	if err != nil {
-		return fmt.Errorf("failed to get EH sections: %w", err)
+		// Any error means section is not found, which is not an error -- there's simply no data for
+		// us to parse present.
+		return nil
 	}
 
 	if ehFrameSec == nil {

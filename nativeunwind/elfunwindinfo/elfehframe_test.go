@@ -117,7 +117,7 @@ func TestEhFrame(t *testing.T) {
 				deltas: &sdtypes.StackDeltaArray{},
 				hooks:  &tester,
 			}
-			err = ee.parseEHFrame()
+			err = ee.parseEHFrame(ef)
 			require.NoError(t, err)
 			assert.Equal(t, len(test.res), tester.found)
 		})

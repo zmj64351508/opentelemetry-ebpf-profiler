@@ -102,6 +102,20 @@ func (ee *elfExtractor) extractDebugDeltas() error {
 	return err
 }
 
+func (ee *elfExtractor) extractMiniDebugDeltas() error {
+	var err error
+	debugELF := ee.file.ExtractAndOpenMiniDebugInfo()
+	if debugELF != nil {
+		if err = ee.parseDebugFrame(debugELF); err != nil {
+			return err
+		}
+		if err = ee.parseEHFrame(debugELF); err != nil {
+			return err
+		}
+	}
+	return err
+}
+
 func isLibCrypto(elfFile *pfelf.File) bool {
 	if name, err := elfFile.DynString(elf.DT_SONAME); err == nil && len(name) == 1 {
 		// Allow generic register CFA for openssl libcrypto
@@ -140,7 +154,7 @@ func ExtractELF(elfRef *pfelf.Reference, interval *sdtypes.IntervalData) error {
 	if err = ee.parseGoPclntab(); err != nil {
 		return fmt.Errorf("failure to parse golang stack deltas: %v", err)
 	}
-	if err = ee.parseEHFrame(); err != nil {
+	if err = ee.parseEHFrame(elfFile); err != nil {
 		return fmt.Errorf("failure to parse eh_frame stack deltas: %v", err)
 	}
 	if err = ee.parseDebugFrame(elfFile); err != nil {
@@ -151,6 +165,11 @@ func ExtractELF(elfRef *pfelf.Reference, interval *sdtypes.IntervalData) error {
 		// debug information for additional .debug_frame stack deltas.
 		if err = ee.extractDebugDeltas(); err != nil {
 			return fmt.Errorf("failure to parse debug stack deltas: %v", err)
+		}
+	}
+	if len(deltas) < numIntervalsToOmitDebugLink {
+		if err = ee.extractMiniDebugDeltas(); err != nil {
+			return fmt.Errorf("failure to parse mini debug stack deltas: %v", err)
 		}
 	}
 
